@@ -1,12 +1,19 @@
-import spi
-spi = SPI("/dev/spidev1.0")
-spi.mode = SPI.MODE_0
+import spidev
+
+spi = spidev.SpiDev()
+spi.open(0, 0)
+spi.mode = 0b01
 spi.bits_per_word = 8
-spi.speed = 500000
+spi.max_speed_hz = 500000
 
-angle = 30
+angle1 = 3000
+angle2 = 4560
+to_send = [int(angle1 / 256), angle1 % 256, int(angle2 / 256), angle2 % 256]
 
-spi.write([0x00, 0x00, 0x00, hex(angle)])
+for i in range(len(to_send)):
+    print(hex(to_send[i]))
+
+spi.xfer(to_send)
 
 # received = spi.transfer([0x11, 0x22, 0xFF])
 # received = spi.read(10)
